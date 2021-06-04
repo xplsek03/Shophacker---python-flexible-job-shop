@@ -1,0 +1,67 @@
+<!-- xplsek03 | 2021 | FIT VUT Brno, bakalarska prace Razeni manipulaci pro morici linky //-->
+
+
+{% extends "base.html" %}
+
+{% block title %}
+Probíhající úloha - {{ nazev }}
+{% end %}
+
+{% block content %}
+
+<div class="card bg-light m-4">
+  <h5 class="card-header">Běžící úloha - {{ nazev }}</h5>
+  <div class="card-body">
+
+    <form method="post">
+
+        <div class="d-flex justify-content-center">
+        <div class="spinner-grow text-primary" role="status">
+        <span class="sr-only">Loading...</span>
+        </div>
+        </div>
+        <p>Datum zahájení: {{ start }}</p>
+        <p>Nejlepší hodnota [s]: <strong class="vzor">-</strong></p>
+
+        <p style="display: none;" class="hotovo"><strong>Úloha byla dokončena. Pro zobrazení výsledku klikněte na tlačítko níže.</strong></p>
+
+      <input type="submit" class="btn btn-danger kill-it" name="kill" value="Ukončit">
+      <input type="submit" class="btn btn-primary show-it" style="display: none;" name="show-result" value="Zobrazit výsledek">
+
+      {% module xsrf_form_html() %}
+
+    </form>
+
+  </div>
+</div>
+
+<script type="text/javascript">
+   var ws = new WebSocket("wss://localhost:8888/ws");
+   ws.onopen = function() {
+   };			
+   ws.onmessage = function(evt) { 
+       var received_msg = evt.data;
+       var eeey = JSON.parse(received_msg);
+       console.log(eeey);
+       if(eeey.message == 'update') {
+           $(".vzor").text(eeey.best);
+       }
+       else if(eeey.message == 'finished') {
+           $(".spinner-grow").css("display", "none");
+           $(".kill-it").css("display", "none");
+           $(".show-it").css("display", "block");
+           $(".hotovo").css("display", "block");
+       }
+   };		
+   ws.onclose = function() {
+   };
+    
+    //$(document).ready(function() {
+    //  $(".kill-it").click(function(){
+    //      ws.send("STOP");
+    //  }); 
+    //});
+   
+</script>
+
+{% end %}

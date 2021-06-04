@@ -1,0 +1,29 @@
+<!-- xplsek03 | 2021 | FIT VUT Brno, bakalarska prace Razeni manipulaci pro morici linky //-->
+
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="{{ static_url('css/bootstrap.min.css') }}">
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="{{ static_url('js/jquery-3.3.1.min.js') }}"></script>
+    <script src="{{ static_url('js/popper.min.js') }}"></script>
+    <script src="{{ static_url('js/bootstrap.min.js') }}"></script>
+
+    <title>{% block title %}{% end %}</title>
+
+  </head>
+  <body>
+
+  	{% block menu %}{% end %}
+
+	{% block content %}{% end %}
+
+  </body>
+</html>

@@ -1,0 +1,67 @@
+<!-- xplsek03 | 2021 | FIT VUT Brno, bakalarska prace Razeni manipulaci pro morici linky //-->
+
+
+{% extends "nav.html" %}
+
+{% block title %}
+Vana - {{ item['nazev'] }}
+{% end %}
+
+{% block content %}
+
+<div class="card bg-light m-4">
+  <h5 class="card-header">{{ item['nazev'] }}</h5>
+  <div class="card-body">
+    <h5 class="card-title">Editovat vlastnosti vany</h5>
+
+    <form method="post" action="/vany/{{ str(item['_id']) }}">
+
+      <div class="form-group">
+        <fieldset>
+          <label class="control-label">Označení vany</label>
+          <input class="form-control" name="sign" type="text" value="{{ item['sign'] }}" readonly="">
+        </fieldset>
+      </div>
+
+      <div class="form-group">
+        <label class="col-form-label">Název vany</label>
+        <input type="text" name="nazev" class="form-control" value="{{ item['nazev'] }}">
+      </div>
+
+      <div class="form-group">
+        <label class="col-form-label">Position (int 0-x)</label>
+        <input type="number" name="position" class="form-control" value="{{ item['position'] }}">
+      </div>
+
+      <div class="form-group">
+        <label class="col-form-label">Exp_min [s]</label>
+        <input type="number" name="exp_min" class="form-control" value="{{ item['exp_min'] }}">
+      </div>
+
+      <div class="form-group">
+        <label class="col-form-label">Exp_max [s]</label>
+        <input type="number" name="exp_max" class="form-control" value="{{ item['exp_max'] }}">
+      </div>
+
+      <div class="form-group">
+        <label class="col-form-label">Drain [s]</label>
+        <input type="number" name="drain" class="form-control" value="{{ item['drain'] }}">
+      </div>
+
+      <div class="form-group">
+        <label class="col-form-label">Dive [s]</label>
+        <input type="number" name="dive" class="form-control" value="{{ item['dive'] }}">
+      </div>
+
+      <a href="/vany" class="btn btn-secondary">Zpět na vany</a>
+      <input type="submit" class="btn btn-primary" name="save" value="Uložit">
+      <input type="submit" class="btn btn-danger" name="delete" value="Smazat">
+
+      {% module xsrf_form_html() %}
+
+    </form>
+
+  </div>
+</div>
+
+{% end %}

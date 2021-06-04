@@ -1,0 +1,14 @@
+DEBUG:asyncio:Using selector: EpollSelector
+INFO:tornado.access:200 GET /login?next=%2F (127.0.0.1) 4.39ms
+INFO:tornado.access:200 GET /static/css/bootstrap.min.css?v=93b7fbe38cfbc8495a793bbf16ea89190f46dd827655537baf4d2692b7890a0eedd267ab6beacbb8277eb81b9aac875335fac8f31abf7c513d98e21b1bd8de5c (127.0.0.1) 5.45ms
+INFO:tornado.access:302 POST /login?next=%2F (127.0.0.1) 404.44ms
+INFO:tornado.access:200 GET / (127.0.0.1) 3.88ms
+WARNING:tornado.access:404 GET /favicon.ico (127.0.0.1) 0.94ms
+INFO:tornado.access:200 GET /task (127.0.0.1) 81.28ms
+INFO:tornado.access:200 POST /task (127.0.0.1) 66.27ms
+INFO:tornado.access:101 GET /ws (127.0.0.1) 1.44ms
+INFO:tornado.access:302 POST /task (127.0.0.1) 42.62ms
+INFO:tornado.access:200 GET / (127.0.0.1) 0.90ms
+INFO:tornado.access:302 GET /logout (127.0.0.1) 0.61ms
+INFO:tornado.access:302 GET / (127.0.0.1) 0.75ms
+INFO:tornado.access:200 GET /login?next=%2F (127.0.0.1) 0.84ms

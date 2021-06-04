@@ -1,0 +1,40 @@
+<!-- xplsek03 | 2021 | FIT VUT Brno, bakalarska prace Razeni manipulaci pro morici linky //-->
+
+
+{% extends "nav.html" %}
+
+{% block title %}
+Historie
+{% end %}
+
+{% block content %}
+
+<div class="m-3 d-flex align-items-end flex-column">
+    <form method="post" action="/historie/delete-all">
+    <input type="submit" name="delete-all" value="Smazat vše" class="btn btn-danger" />
+    <input type="submit" name="delete-not-finished" value="Smazat nedokončené úlohy" class="btn btn-danger" />
+    {% module xsrf_form_html() %}
+    </form>
+</div>
+
+<div class="card-columns m-3">
+
+    {% for i in items %}
+
+<div class="card bg-light m-3" style="max-width: 20rem;">
+  <div class="card-header">Úloha</div>
+  <div class="card-body">
+    <h4 class="card-title">{{ i['nazev'] }}</h4>
+    <p class="card-description">Dokončeno: {{ "Ano" if 'vysledek' in i else "Ne" }}</p>
+    
+    {% if 'vysledek' in i %}
+    <a href="/historie/{{ str(i['_id']) }}" class="btn btn-primary">Detail</a>
+    {% end %}
+  </div>
+</div>
+
+  {% end %}
+
+</div>
+
+{% end %}

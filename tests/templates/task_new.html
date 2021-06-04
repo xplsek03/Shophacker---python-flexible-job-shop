@@ -1,0 +1,90 @@
+<!-- xplsek03 | 2021 | FIT VUT Brno, bakalarska prace Razeni manipulaci pro morici linky //-->
+
+
+{% extends "nav.html" %}
+
+{% block title %}
+Vytvořit novou úlohu
+{% end %}
+
+{% block content %}
+
+<div class="card bg-light m-4">
+  <h5 class="card-header">Vytvoření nové úlohy</h5>
+  <div class="card-body">
+
+    <form method="post" class="taskform">
+
+      <div class="form-group">
+        <label class="col-form-label">Název úlohy</label>
+        <input type="text" class="form-control" name="nazev" placeholder="">
+      </div>
+
+      <h5>Produkty k výrobě</h5>
+
+      <div class="form-group produkty">
+        <div class="form-inline mb-3 otec">
+          <div class="form-group">
+            <select class="custom-select" name="produkt">
+              {% for p in produkty %}
+              <option value="{{ str(p['_id']) }}">{{ p['nazev'] }} - {{ p['sign'] }}</option>
+              {% end %}
+            </select>
+          </div>
+          <div class="form-group mx-3">
+            <input type="number" class="form-control" name="pocet" placeholder="Počet">
+          </div>
+          <a href="#noway" class="btn btn-danger delete-product">Smazat produkt</a>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <a href="#noway" class="btn btn-secondary krok-add">Přidat další produkt</a>
+      </div>
+
+      <div class="form-group">
+        <label class="col-form-label">Zmnožení produktů na výstupu (každý produkt x M)</label>
+        <input type="number" class="form-control" name="multiply" value="1">
+      </div>
+      
+      <h5>Dostupné jeřáby</h5>
+      <p>V rámci následujícího multiselect pole je potřeba označit myší alespoň jeden jeřáb (ctrl + kliknutí).</p>
+
+      <div class="form-group">
+        <select multiple="" name="jeraby[]" class="form-control">
+          {% for j in jeraby %}
+          <option value="{{ str(j['_id']) }}">{{ j['nazev'] }} - {{ j['sign'] }}</option>
+          {% end %}
+        </select>
+      </div>
+      
+      <a href="/" class="btn btn-secondary">Zpět</a>
+      <input type="submit" class="btn btn-primary" name="start" value="Zahájit výpočet">
+      {% if has_prev %}
+      <input type="submit" class="btn btn-secondary" name="last" value="Opakovat poslední úlohu">
+      {% end %}
+
+      {% module xsrf_form_html() %}
+
+    </form>
+
+  </div>
+</div>
+
+<script type="text/javascript">
+  jQuery(function($) {
+  $(document).on('click', '.delete-product', function() {
+    $(this).parent('.otec').remove();
+  });
+});
+
+jQuery(function($) {
+  $(document).on('click', '.krok-add', function() {
+    var $foo2 = $("<div class='form-inline mb-3 otec'><div class='form-group'><select class='custom-select' name='produkt'>{% for p in produkty %}<option value='{{ str(p['_id']) }}'>{{ p['nazev'] }} - {{ p['sign'] }}</option>{% end %}</select></div><div class='form-group mx-3'><input type='number' class='form-control' name='pocet' placeholder='Počet'></div><a href='#noway' class='btn btn-danger delete-product'>Smazat produkt</a></div>");
+    $(".produkty").append($foo2);
+  });
+});
+
+</script>
+
+{% end %}

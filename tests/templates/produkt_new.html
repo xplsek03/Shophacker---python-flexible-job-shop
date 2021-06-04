@@ -1,0 +1,83 @@
+<!-- xplsek03 | 2021 | FIT VUT Brno, bakalarska prace Razeni manipulaci pro morici linky //-->
+
+
+{% extends "nav.html" %}
+
+{% block title %}
+Nový produkt
+{% end %}
+
+{% block content %}
+
+<div class="card bg-light m-4">
+  <h5 class="card-header">Vytvoření nového produktu</h5>
+  <div class="card-body">
+
+    <form method="post">
+
+    <div class="form-group">
+        <label class="control-label">Označení produktu (P1, P2..)</label>
+        <input class="form-control" name="sign" type="text" value="">
+    </div>
+
+   <div class="form-group">
+      <label class="col-form-label">Název produktu</label>
+      <input type="text" name="nazev" class="form-control" value="">
+    </div>
+
+    <h5>Receptura</h5>
+    <p>Při vytváření/editaci produktů je potřeba v rámci všech multiselect poli formuláře označit myší všechny zvolené vany (ctrl + kliknutí).</p>
+
+    <div class="form-group vsechny-kroky">
+
+      <div class="form-inline mb-3 otec">
+        <div class="form-group mr-3">
+          <div class="form-group">
+           <select name="krok0[]" multiple="" class="form-control">
+
+              {% for key,val in kroky.items() %}
+              <option value="{{str(key)}}">{{ val['sign'] }} - {{ val['nazev'] }}</option>
+              {% end %}
+
+          </select>
+          </div>
+        </div>
+        <a class="btn btn-danger krok-delete" href="#noway">Smazat krok</a>
+      </div>
+
+    </div>
+
+    <div class="form-group xxx">
+      <a href="#noway" class="btn btn-secondary krok-add">Přidat krok navíc</a>
+    </div>
+
+      <a href="/produkty" class="btn btn-secondary">Zpět na produkty</a>
+      <input type="submit" class="btn btn-primary" name="new" value="Uložit">
+
+    {% module xsrf_form_html() %}
+
+  </form>
+
+  </div>
+</div>
+
+
+<script type="text/javascript">
+  jQuery(function($) {
+  $(document).on('click', '.krok-delete', function() {
+    $(this).parent('.otec').remove();
+  });
+});
+
+  jQuery(function($) {
+  $(document).on('click', '.krok-add', function() {
+    var $numb = Math.floor((Math.random() * 1000000) + 1);
+    var $foo = $("<div class='form-inline mb-3 otec'><div class='form-group mr-3'><div class='form-group'><select name='krok" + $numb + "[]' multiple='' class='form-control'>{% for key,val in kroky.items() %}<option value='{{str(key)}}'>{{ val['sign'] }} - {{ val['nazev'] }}</option>{% end %}</select></div></div><a class='btn btn-danger krok-delete' href='#noway'>Smazat krok</a></div>");
+    $(".vsechny-kroky").append($foo);
+  });
+});
+
+</script>
+
+{% end %}
+

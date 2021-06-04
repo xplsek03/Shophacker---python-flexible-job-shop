@@ -1,0 +1,36 @@
+<!-- xplsek03 | 2021 | FIT VUT Brno, bakalarska prace Razeni manipulaci pro morici linky //-->
+
+
+{% extends "nav.html" %}
+
+{% block title %}
+Jeřáby
+{% end %}
+
+{% block content %}
+
+<div class="card-columns m-3">
+
+  {% for i in items %}
+
+<div class="card bg-light m-3" style="max-width: 20rem;">
+  <div class="card-header">Jeřáb</div>
+  <div class="card-body">
+    <h4 class="card-title">{{ i['nazev'] }}</h4>
+    <a href="/jeraby/{{ str(i['_id']) }}" class="btn btn-primary">Detail</a>
+  </div>
+</div>
+
+  {% end %}
+
+<div class="card bg-light m-3" style="max-width: 20rem;">
+  <div class="card-header">&nbsp;</div>
+  <div class="card-body">
+    <h4 class="card-title">&nbsp;</h4>
+    <a href="/jeraby/add" class="btn btn-success">Přidat jeřáb</a>
+  </div>
+</div>
+
+</div>
+
+{% end %}

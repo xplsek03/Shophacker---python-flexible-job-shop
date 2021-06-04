@@ -1,0 +1,76 @@
+<!-- xplsek03 | 2021 | FIT VUT Brno, bakalarska prace Razeni manipulaci pro morici linky //-->
+
+
+{% extends "nav.html" %}
+
+{% block title %}
+Konfigurační parametry
+{% end %}
+
+{% block content %}
+
+<div class="card bg-light m-4">
+  <h5 class="card-header">Nastavení konfiguračních parametrů</h5>
+  <div class="card-body">
+    <p class="card-text">Následující konfigurační parametry ovlivňují chování skriptu.</p>
+
+    <form method="post">
+
+      <div class="form-group">
+        <label class="col-form-label">Pravděpodobnost mutace změnou prvku (float 0-1)</label>
+        <input type="number" step="0.01" class="form-control" name="mutace_single" value="{{ config['mutace_single'] }}">
+      </div>
+
+      <div class="form-group">
+        <label class="col-form-label">Počet měněných operací namáčení při mutaci změnou prvku (int 0+)</label>
+        <input type="number" class="form-control" name="mutace_single_pocet_namaceni" value="{{ config['mutace_single_pocet_namaceni'] }}">
+      </div>
+
+      <div class="form-group">
+        <label class="col-form-label">Počet měněných operací transportu při mutaci změnou prvku (int 0+)</label>
+        <input type="number" class="form-control" name="mutace_single_pocet_transporty" value="{{ config['mutace_single_pocet_transporty'] }}">
+      </div>
+
+      <div class="form-group">
+        <label class="col-form-label">Pravděpodobnost mutace změnou pořadí prvku (float 0-1)</label>
+        <input type="number" step="0.01" class="form-control" name="mutace_order" value="{{ config['mutace_order'] }}">
+      </div>
+
+      <div class="form-group">
+        <label class="col-form-label">Počet měněných jobů při mutaci pořadí prvku (int 0+)</label>
+        <input type="number" class="form-control" name="mutace_order_pocet" value="{{ config['mutace_order_pocet'] }}">
+      </div>
+
+      <div class="form-group">
+        <label class="col-form-label">Počet generací (int 1+)</label>
+        <input type="number" class="form-control" name="generace" value="{{ config['generace'] }}">
+      </div>
+
+      <div class="form-group">
+        <label class="col-form-label">Populace (int 2+)</label>
+        <input type="number" class="form-control" name="populace" value="{{ config['populace'] }}">
+      </div>
+
+      <div class="form-group">
+        <label class="col-form-label">Počet procesů (CPU cores) pro paralelní ohodnocení jedinců (int 2+)</label>
+        <input type="number" class="form-control" name="cores" value="{{ config['cores'] }}">
+      </div>
+
+      <div class="form-group">
+      <div class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input" id="chk" name="nekonecno" value="{{ 'Yes' if config['nekonecno'] else 'No' }}" {{ "checked" if config['nekonecno'] else '' }} >
+        <label class="custom-control-label" for="chk">Generování bude probíhat donekonečna, bez ohledu na počet generací</label>
+      </div>
+    </div>
+
+      <a href="/" class="btn btn-secondary">Hlavní strana</a>
+      <input type="submit" class="btn btn-primary" name="save" value="Uložit">
+
+      {% module xsrf_form_html() %}
+
+    </form>
+
+  </div>
+</div>
+
+{% end %}

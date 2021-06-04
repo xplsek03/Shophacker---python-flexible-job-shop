@@ -1,0 +1,56 @@
+<!-- xplsek03 | 2021 | FIT VUT Brno, bakalarska prace Razeni manipulaci pro morici linky //-->
+
+
+{% extends "nav.html" %}
+
+{% block title %}
+Nový jeřáb
+{% end %}
+
+{% block content %}
+
+<div class="card bg-light m-4">
+  <h5 class="card-header">Vytvořit jeřáb</h5>
+  <div class="card-body">
+
+    <form method="post">
+    <div class="form-group">
+      <label class="col-form-label">Označení jeřábu (J1, J2..)</label>
+      <input type="text" class="form-control" name="sign" placeholder="">
+    </div>
+
+    <div class="form-group">
+      <label class="col-form-label">Název jeřábu</label>
+      <input type="text" class="form-control" name="nazev" placeholder="">
+    </div>
+
+      <div class="form-group">
+        <label class="col-form-label">Raise_low [s]</label>
+        <input type="number" name="raise_low" class="form-control" value="">
+      </div>
+
+      <div class="form-group">
+        <label class="col-form-label">Raise_high [s]</label>
+        <input type="number" name="raise_high" class="form-control" value="">
+      </div>
+
+    <div class="form-group">
+      <label class="col-form-label">Empty_move [s]</label>
+      <input type="number" name="prejezd" class="form-control" placeholder="">
+    </div>
+
+    <div class="form-group">
+      <label class="col-form-label">Loaded_move [s]</label>
+      <input type="number" name="move" class="form-control" placeholder="">
+    </div>
+
+      <a href="/jeraby" class="btn btn-secondary">Zpět na jeřáby</a>
+      <input type="submit" class="btn btn-primary" name="new" value="Uložit">
+
+      {% module xsrf_form_html() %}
+    </form>
+
+  </div>
+</div>
+
+{% end %}

@@ -1,0 +1,42 @@
+<!-- xplsek03 | 2021 | FIT VUT Brno, bakalarska prace Razeni manipulaci pro morici linky //-->
+
+
+{% extends "base.html" %}
+
+{% block menu %}
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <a class="navbar-brand" href="/">5H0PH4CK3R</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarColor01">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="#">Domů</a>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Nastavení</a>
+        <div class="dropdown-menu">
+          <a class="dropdown-item" href="/vany">Vany</a>
+          <a class="dropdown-item" href="/jeraby">Jeřáby</a>
+          <a class="dropdown-item" href="/konfig">Konfigurační parametry</a>
+          <a class="dropdown-item" href="/produkty">Produkty</a>
+        </div>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Úlohy</a>
+        <div class="dropdown-menu">
+          <a class="dropdown-item" href="/task">Nová úloha</a>
+          <a class="dropdown-item" href="/historie">Historie</a>
+        </div>
+      </li>
+     <li class="nav-item">
+        <a class="nav-link" href="/logout">Odhlásit se</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+{% end %}

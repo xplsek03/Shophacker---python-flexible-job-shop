@@ -1,0 +1,87 @@
+<!-- xplsek03 | 2021 | FIT VUT Brno, bakalarska prace Razeni manipulaci pro morici linky //-->
+
+{% extends "nav.html" %}
+
+{% block title %}
+Produkt - {{ item['nazev'] }}
+{% end %}
+
+{% block content %}
+
+
+<div class="card bg-light m-4">
+  <h5 class="card-header">Produkt {{ item['nazev'] }}</h5>
+  <div class="card-body">
+
+    <form method="post" action="/produkty/{{ str(item['_id']) }}">
+
+    <div class="form-group">
+        <label class="control-label">Označení produktu</label>
+        <input class="form-control" type="text" value="{{ item['sign'] }}" readonly="">
+    </div>
+
+   <div class="form-group">
+      <label class="col-form-label">Název produktu</label>
+      <input type="text" name="nazev" class="form-control" value="{{ item['nazev'] }}">
+    </div>
+
+    <h5>Receptura</h5>
+    <p>Při vytváření/editaci produktů je potřeba v rámci všech multiselect poli formuláře označit myší všechny zvolené vany (ctrl + kliknutí).</p>
+
+    <div class="form-group vsechny-kroky">
+
+      {% for i,vany in enumerate(item['kroky']) %}
+
+      <div class="form-inline mb-3 otec">
+        <div class="form-group mr-3">
+          <div class="form-group">
+           <select name="krok{{i}}[]" multiple="" class="form-control">
+
+              {% for id in vany %}
+              <option value="{{str(id)}}">{{ kroky[id]['sign'] }} - {{ kroky[id]['nazev'] }}</option>
+              {% end %}
+
+          </select>
+          </div>  
+        </div>
+        <a class="btn btn-danger krok-delete" href="#noway">Smazat krok</a>
+      </div>  
+
+      {% end %}
+
+    </div>
+
+    <div class="form-group xxx">
+      <a href="#noway" class="btn btn-secondary krok-add">Přidat krok navíc</a>
+    </div>
+
+      <a href="/produkty" class="btn btn-secondary">Zpět na produkty</a>
+      <input type="submit" class="btn btn-primary" name="save" value="Uložit">
+      <input type="submit" class="btn btn-danger" name="delete" value="Smazat">
+
+    {% module xsrf_form_html() %}
+
+  </form>
+
+  </div>
+</div>
+
+
+<script type="text/javascript">
+  jQuery(function($) {
+  $(document).on('click', '.krok-delete', function() {
+    $(this).parent('.otec').remove();
+  });
+});  
+
+  jQuery(function($) {
+  $(document).on('click', '.krok-add', function() {
+    var $numb = Math.floor((Math.random() * 1100000) + 1000);
+    var $foo = $("<div class='form-inline mb-3 otec'><div class='form-group mr-3'><div class='form-group'><select name='krok" + $numb + "[]' multiple='' class='form-control'>{% for key,val in kroky.items() %}<option value='{{str(key)}}''>{{ val['sign'] }} - {{ val['nazev'] }}</option>{% end %}</select></div></div><a class='btn btn-danger krok-delete' href='#noway'>Smazat krok</a></div>");
+    $(".vsechny-kroky").append($foo);
+  });
+});  
+
+</script>
+
+{% end %}

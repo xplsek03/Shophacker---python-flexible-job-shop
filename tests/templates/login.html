@@ -1,0 +1,35 @@
+<!-- xplsek03 | 2021 | FIT VUT Brno, bakalarska prace Razeni manipulaci pro morici linky //-->
+
+
+{% extends "base.html" %}
+
+{% block title %}
+LOGIN
+{% end %}
+
+{% block content %}
+
+<div class="container vh-100">
+    <div class="row h-100 justify-content-center align-items-center">
+        <div class="col-lg-6">
+
+            <form method="post">
+
+              <fieldset>
+                <legend>SHOPHACKER verze pět tisíc</legend>
+                <div class="form-group">
+                  <input type="email" class="form-control" name="email" placeholder="E-mail">
+                </div>
+                <div class="form-group">
+                  <input type="password" class="form-control" name="pass" placeholder="Heslo">
+                </div>
+                <input type="submit" class="btn btn-primary" value="Vstoupit">
+                {% module xsrf_form_html() %}
+              </fieldset>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+{% end %}

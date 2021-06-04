@@ -1,0 +1,10 @@
+tornado==6.1
+numpy==1.20.1
+matplotlib==3.3.4
+networkx==2.5
+bellmanford==0.2.1
+pymongo==3.11.3
+pymoo==0.4.2.2
+cryptography==3.4.6
+pathos==0.2.7
+dnspython==2.1.0

@@ -1,0 +1,104 @@
+/*
+xplsek03 | 2021 | FIT VUT Brno, bakalarska prace Razeni manipulaci pro morici linky
+*/
+
+.ui-dialog {
+z-index: 5000;
+}
+
+.modal-xl {
+max-width: 1174px !important;
+}
+
+/* animace */
+.animace-out {
+width: 100%;
+position: relative;
+height: 360px;
+float: left;
+margin-top: 2px;
+}
+
+.zadek-jerabu {
+width: 100%;
+background: #7d7d7d;
+height: 10px;
+position: absolute;
+top: 80px;
+left: 0;
+}
+
+.podlaha {
+width: 100%;
+position: absolute;
+bottom: 0px;
+height: 25px;
+background: gray;
+z-index: 5;
+}
+
+.jerab {
+position: absolute;
+top: -18px;
+left: 0;
+background: url('../images/jerab.png') no-repeat;
+height: 134px;
+width: 114px;
+background-size: contain !important;
+z-index: 10;
+}
+
+.vana {
+position: absolute;
+background-size: contain !important;
+top: 242px;
+left: 0;
+background: url('../images/vana.png') no-repeat;
+height: 105px;
+width: 114px;
+}
+
+.kostka {
+width: 40px;
+height: 40px;
+position: absolute;
+z-index: 5;
+top: 265px;
+left: 0;
+background: green;
+}
+
+.hak {
+position: absolute;
+background-size: contain !important;
+top: -18px;
+left: 0;
+background: url('../images/hak.png') no-repeat;
+height: 171px;
+width: 114px;
+z-index: 5;
+}
+
+.vana-title {
+position: absolute;
+bottom: -11px;
+color: white;
+margin: 0 auto;
+font-weight: bold;
+z-index: 100;
+left: 0;
+right: 0;
+text-align: center;
+}
+
+.jerab-title {
+position: absolute;
+top: 55px;
+color: black;
+margin: 0 auto;
+font-weight: bold;
+z-index: 100;
+left: 0;
+right: 0;
+text-align: center;
+}

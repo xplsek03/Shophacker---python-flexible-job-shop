@@ -1,0 +1,63 @@
+<!-- xplsek03 | 2021 | FIT VUT Brno, bakalarska prace Razeni manipulaci pro morici linky //-->
+
+
+{% extends "nav.html" %}
+
+{% block title %}
+Nová vana
+{% end %}
+
+{% block content %}
+
+<div class="card bg-light m-4">
+  <h5 class="card-header">Vytvoření nové vany</h5>
+  <div class="card-body">
+
+    <form method="post">
+
+      <div class="form-group">
+          <label class="control-label">Označení vany (V1, V2..)</label>
+          <input class="form-control" name="sign" type="text" value="">
+      </div>
+
+      <div class="form-group">
+        <label class="col-form-label">Název vany</label>
+        <input type="text" name="nazev" class="form-control" value="">
+      </div>
+
+      <div class="form-group">
+        <label class="col-form-label">Position (int 0-x)</label>
+        <input type="number" name="position" class="form-control" value="">
+      </div>
+
+      <div class="form-group">
+        <label class="col-form-label">Exp_min [s]</label>
+        <input type="number" name="exp_min" class="form-control" value="">
+      </div>
+
+      <div class="form-group">
+        <label class="col-form-label">Exp_max [s]</label>
+        <input type="number" name="exp_max" class="form-control" value="">
+      </div>
+
+      <div class="form-group">
+        <label class="col-form-label">Drain [s]</label>
+        <input type="number" name="drain" class="form-control" value="">
+      </div>
+
+      <div class="form-group">
+        <label class="col-form-label">Dive [s]</label>
+        <input type="number" name="dive" class="form-control" value="">
+      </div>
+
+      <a href="/vany" class="btn btn-secondary">Zpět na vany</a>
+      <input type="submit" class="btn btn-primary" name="new" value="Uložit">
+
+      {% module xsrf_form_html() %}
+
+    </form>
+
+  </div>
+</div>
+
+{% end %}

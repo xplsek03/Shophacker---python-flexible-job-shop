@@ -1,0 +1,564 @@
+<!-- xplsek03 | 2021 | FIT VUT Brno, bakalarska prace Razeni manipulaci pro morici linky //-->
+
+
+{% extends "nav.html" %}
+
+{% block title %}
+Historie - {{ item['nazev'] }}
+{% end %}
+
+{% block content %}
+
+<script src="{{ static_url('js/jquery-ui.min.js') }}"></script>
+<link rel="stylesheet" href="{{ static_url('css/jquery-ui.css') }}" />
+<script src="{{ static_url('js/gsap.min.js') }}"></script>
+
+<link rel="stylesheet" href="{{ static_url('css/animace.css') }}" />
+
+<script type="text/javascript">
+$( function() {
+
+    {% for g in gantt_vany %}
+
+        $( "#{{ g['id'] }}" ).dialog({
+            autoOpen: false,
+            show: {
+            effect: "blind",
+            duration: 150
+            },
+            hide: {
+            effect: "explode",
+            duration: 150
+            }
+        });
+
+        $( "#open{{ g['id'] }}" ).on( "click", function() {
+          $( "#{{ g['id'] }}" ).dialog( "open" );
+        });
+
+    {% end %}
+
+    {% for g in gantt_jeraby %}
+
+        $( "#{{ g['id'] }}" ).dialog({
+            autoOpen: false,
+            show: {
+            effect: "blind",
+            duration: 150
+            },
+            hide: {
+            effect: "explode",
+            duration: 150
+            }
+        });
+
+        $( "#open{{ g['id'] }}" ).on( "click", function() {
+          $( "#{{ g['id'] }}" ).dialog( "open" );
+        });
+
+    {% end %}
+ 
+  } );
+  </script>
+  
+  <script type="text/javascript">
+
+    document.addEventListener("DOMContentLoaded", function(event){
+
+    tl = new TimelineMax({paused: true, onUpdate: update});
+    tl
+    {% for index, akce in enumerate(animace) %}
+    
+        {% if akce['typ'] == 'namaceni' %}
+            
+            // pro namaceni co zacinaji
+            {% if not akce['prev'] %}
+            
+             .set( $(".product{{ akce['productid'] }}"),
+                {
+                    scale: 1,
+                    display: 'block',
+                    autoAlpha: 1,
+                }, {{ akce['start'] }})  
+        
+        {% else %}
+        // pro namaceni co konci
+                
+             .set( $(".product{{ akce['productid'] }}"),
+                {
+                    scale: 1,
+                    display: 'none',
+                    autoAlpha: 1,
+                }, {{ akce['end'] }}) 
+        
+        {% end %}
+            
+            
+        
+        {% elif akce['typ'] == 'transport' %}
+            
+                // DIVE
+                .to( $(".hak{{ akce['stroj'] }}"), 
+                    {
+                        duration: {{ slovnik_van[ slovnik_result[ akce['prev'] ]['stroj'] ]['dive'] }},
+                        top: '106px',
+                    },
+                    {{ akce['start'] - slovnik_van[ slovnik_result[ akce['prev'] ]['stroj'] ]['dive'] }}
+                 )
+
+
+                {% set t = akce['start'] %}
+    
+        
+                // zvedani do pozice RAISE_LOW, jak pro hak tak pro produkt
+                .to( $(".hak{{ akce['stroj'] }}"), 
+                    {
+                        duration: {{ slovnik_jerabu[akce['stroj']]['raise_low'] }},
+                        top: '40px',
+                    },
+                    {{ t }}
+                 )
+                .to( $(".product{{ slovnik_result[akce['prev']]['productid'] }}"), 
+                    {
+                        duration: {{ slovnik_jerabu[akce['stroj']]['raise_low'] }},
+                        top: '199px',
+                    },
+                    {{ t }}
+                 )
+                 
+                 {% set t += (slovnik_jerabu[akce['stroj']]['raise_low'] + slovnik_van[ slovnik_result[ akce['prev'] ]['stroj'] ]['drain']) %}
+                 
+                 
+                 // TADY PROVADIS DRAIN, nech to odkapat
+
+
+                // zvedani do pozice RAISE_HIGH, jak pro hak tak pro produkt
+                .to( $(".hak{{ akce['stroj'] }}"), 
+                    {
+                        duration: {{ slovnik_jerabu[akce['stroj']]['raise_high'] }},
+                        top: '-18px',
+                    },
+                    {{ t }}
+                 )
+                .to( $(".product{{ slovnik_result[akce['prev']]['productid'] }}"), 
+                    {
+                        duration: {{ slovnik_jerabu[akce['stroj']]['raise_high'] }},
+                        top: '141px',
+                    },
+                    {{ t }}
+                 )
+                 
+                 
+                 {% set t += slovnik_jerabu[akce['stroj']]['raise_high'] %}
+             
+                 
+                 // presun jerab i s hakem a produktem na dalsi pozici
+                .to( $(".hak{{ akce['stroj'] }}"), 
+                    {
+                        duration: {{ slovnik_jerabu[akce['stroj']]['move'] * abs( slovnik_van[ slovnik_result[ akce["prev"] ]["stroj"] ]["position"] - slovnik_van[ slovnik_result[ akce["next"] ]["stroj"] ]["position"] ) }},
+                        left: '{{ slovnik_van[ slovnik_result[ akce["next"] ]["stroj"] ]["position"] * 114 }}px'
+                    },
+                    {{ t }}
+                 )
+                .to( $(".jerab{{ akce['stroj'] }}"), 
+                    {
+                        duration: {{ slovnik_jerabu[akce['stroj']]['move'] * abs( slovnik_van[ slovnik_result[ akce["prev"] ]["stroj"] ]["position"] - slovnik_van[ slovnik_result[ akce["next"] ]["stroj"] ]["position"] ) }},
+                        left: '{{ slovnik_van[ slovnik_result[ akce["next"] ]["stroj"] ]["position"] * 114 }}px'
+
+                    },
+                    {{ t }}
+                 )
+                .to( $(".product{{ slovnik_result[akce['prev']]['productid'] }}"), 
+                    {
+                        duration: {{ slovnik_jerabu[akce['stroj']]['move'] * abs( slovnik_van[ slovnik_result[ akce["prev"] ]["stroj"] ]["position"] - slovnik_van[ slovnik_result[ akce["next"] ]["stroj"] ]["position"] ) }},
+                        left: '{{ slovnik_van[ slovnik_result[ akce["next"] ]["stroj"] ]["position"] * 114 + 37 }}px'
+
+                    },
+                    {{ t }}
+                 )  
+                 
+                 
+                 // {% set t += (slovnik_jerabu[akce['stroj']]['move'] * abs( slovnik_van[ slovnik_result[ akce["prev"] ]["stroj"] ]["position"] - slovnik_van[ slovnik_result[ akce["next"] ]["stroj"] ]["position"] )) %}
+                  
+                // NEWGEN - mezera
+                {% set t = akce['end'] - slovnik_van[ slovnik_result[ akce['prev'] ]['stroj'] ]['dive'] %} 
+                                               
+                // DIVE i s produktem
+                .to( $(".hak{{ akce['stroj'] }}"), 
+                    {
+                        duration: {{ slovnik_van[ slovnik_result[ akce['prev'] ]['stroj'] ]['dive'] }},
+                        top: '106px',
+                    },
+                    {{ t }}
+                 )
+                 
+                .to( $(".product{{ slovnik_result[akce['prev']]['productid'] }}"), 
+                    {
+                        duration: {{ slovnik_van[ slovnik_result[ akce['prev'] ]['stroj'] ]['dive'] }},
+                        top: '265px'
+                    },
+                    {{ t }}
+                 ) 
+                 
+                 
+                 {% set t += slovnik_van[ slovnik_result[ akce['prev'] ]['stroj'] ]['dive'] %}
+                 
+                 
+                 // RAISE HIGH
+                .to( $(".hak{{ akce['stroj'] }}"), 
+                    {
+                        duration: {{ slovnik_jerabu[akce['stroj']]['raise_high'] }},
+                        top: '-18px'
+                    },
+                    {{ t }}
+                 )
+                 
+                 {% set t += slovnik_jerabu[akce['stroj']]['raise_high'] %}
+                 
+                 // najdi dalsi operaci ktera bude na tomto jerabu
+                 {% set next = [op for op in animace[index+1:] if op['stroj'] == akce['stroj']] %}
+                
+                 // pokud se ma jeste nekam posouvat
+                 {% if len(next) %}
+                
+                     // PRESUN SE NA MISTO DALSIHO TRANSPORTU S TIMTO JERABEM                 
+                     
+                    .to( $(".hak{{ akce['stroj'] }}"), 
+                        {
+                            duration: {{ slovnik_jerabu[akce['stroj']]['empty_move'] * abs( slovnik_van[ slovnik_result[ next[0]["prev"] ]["stroj"] ]["position"] - slovnik_van[ slovnik_result[ akce["next"] ]["stroj"] ]["position"] ) }},
+                            left: '{{ slovnik_van[ slovnik_result[ next[0]["prev"] ]["stroj"] ]["position"] * 114 }}px'
+                        },
+                        {{ t }}
+                     )
+                    .to( $(".jerab{{ akce['stroj'] }}"), 
+                        {
+                            duration: {{ slovnik_jerabu[akce['stroj']]['empty_move'] * abs( slovnik_van[ slovnik_result[ next[0]["prev"] ]["stroj"] ]["position"] - slovnik_van[ slovnik_result[ akce["next"] ]["stroj"] ]["position"] ) }},
+                            left: '{{ slovnik_van[ slovnik_result[ next[0]["prev"] ]["stroj"] ]["position"] * 114 }}px'
+    
+                        },
+                        {{ t }}
+                     )
+                 
+                 {% end %}
+            
+            
+        {% end %}
+        
+        
+    
+    {% end %}
+    ;
+    
+        $(".replay-animation").on('click', function() {
+          tl.restart();
+          if (tl.paused()) {
+              !tl.paused();
+              $(".pausebutton").text("Pozastavit");
+          }
+        });
+     
+        $(".pausebutton").on('click', function() {
+          tl.paused(!tl.paused());
+          $(".pausebutton").text(tl.paused() ? "Pokračovat" : "Pozastavit");
+        });
+
+        $(".speed1").on('click', function() {
+            tl.timeScale(1);
+        });
+        
+        $(".speed2").on('click', function() {
+            tl.timeScale(2);
+        });
+        
+        $(".speed5").on('click', function() {
+            tl.timeScale(5);
+        });
+
+        $(".speed10").on('click', function() {
+            tl.timeScale(10);
+        });
+
+        $(".speed25").on('click', function() {
+            tl.timeScale(25);
+        });
+        
+        $(".speed50").on('click', function() {
+            tl.timeScale(50);
+        });
+
+        $(".speed100").on('click', function() {
+            tl.timeScale(100);
+        });
+
+    // update na casove ose
+    function update() {
+        $(".total-time").text(tl.totalTime().toFixed(2));
+        $(".total-progress").text(~~(tl.totalProgress().toFixed(2) * 100) + "%");
+    }
+    
+    });
+      
+  </script>
+
+<div class="card bg-light m-4">
+  <h5 class="card-header">Úloha {{ item['nazev'] }}</h5>
+  <div class="card-body">
+    <h5 class="card-title">Produkty</h5>
+
+    <form method="post" action="/historie/{{ str(item['_id']) }}">
+
+      <p class="card-description">
+        {% for p in item['produkty'] %}
+        {{ p['nazev'] }} - {{ p['pocet'] * item['multiply'] }} x
+        <br>
+        {% end %}
+      </p>
+
+        <h5 class="card-title">Výsledek</h5>
+
+      <p class="card-description">
+      
+          Čas běhu: 
+          <strong>
+          {% if 'end' in item %}
+          {{ item['end'] - item['start'] }}
+          {% else %}
+          přerušeno
+          {% end %}
+          </strong>
+          <br>
+          Dokončeno: 
+          <strong>
+          {% if 'end' in item %}
+          Ano
+          {% else %}
+          Ne
+          {% end %}
+          </strong>
+          <br>
+          Nejlepší řešení [s]:
+          <strong> 
+          {% if 'vysledek' in item %}
+          {{ item['vysledek']['cmax'] }}
+          {% else %}
+          -
+          {% end %}
+          </strong>
+          
+      </p>
+
+      <a href="/historie" class="btn btn-secondary">Zpět do historie</a>
+        <a href="#noway" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter2">Zobrazit Gantt</a>
+        <a href="#noway" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter1">Zobrazit instrukce</a>
+        <a href="#noway" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter3">Animace</a>
+
+        <input type="submit" class="btn btn-danger" name="delete" value="Smazat">
+
+      {% module xsrf_form_html() %}
+
+    </form>
+
+  </div>
+</div>
+      
+      <!-- modal s instrukcemi //-->
+
+    <div class="modal fade" id="exampleModalCenter1" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Instrukce k řešení</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+ 
+                {% for i in instrukce %}
+                {{ i }}
+                <br>
+                {% end %}             
+ 
+          </div>
+        </div>
+      </div>
+    </div>  
+      
+    <!-- modal end //-->
+
+      <!-- modal s ganttem //-->
+
+    <div class="modal fade" id="exampleModalCenter2" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Ganttův diagram (detail časového úseku po kliknutí)</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+			
+                <div style="width: 84px; text-align: center; float: left; position: relative; height: {{ len(vany_nazvy) * 50 }}px;">
+               
+               	<span style="bottom: 0; top: 0; left: 0px; writing-mode: sideways-lr; position: absolute;">Vany</span>
+                
+                    {% for sign,pos in vany_nazvy.items() %}
+                    
+                    <span style="position: absolute; top: {{ pos }}px;">{{ sign }}</span>
+                
+                    {% end %}
+                
+                </div>
+
+                <div style="width: 1002px; margin-right: 20px; border-left: 1px solid black; border-right: 1px solid black; float: right; position: relative; height: {{ len(vany_nazvy) * 50 }}px; border-bottom: 1px solid black;">
+                
+                    {% for g in gantt_vany %}
+                    
+                        <a href="#nope" id="open{{ g['id'] }}" style="position: absolute; display: block; height: 30px; background: {{ g['color'] }}; top: {{ g['position'] }}px; left: {{ g['left'] }}px; width: {{ g['width'] }}px;"></a>
+                        
+                        <div id="{{ g['id'] }}" title="Časový úsek: namáčení">
+                          <p>
+                          Začátek: <strong>{{ g['start'] }}</strong> 
+                          <br>
+                          Konec: <strong>{{ g['end'] }}</strong>
+                          <br>
+                          Název vany: <strong>{{ g['nazev'] }}</strong>
+                          <br>
+                          Označení vany: <strong>{{ g['sign'] }}</strong>
+                          <br>
+                          Zpracovávaný produkt: <strong>{{ g['nazev_produktu'] }}</strong>
+                          <br>
+                          Barva produktu: <span style="height: 15px; padding: 0 5px; background: {{ g['color'] }};">&nbsp;</span>
+                          </p>
+                        </div>
+                    
+                    {% end %}
+                
+                </div>
+
+                <div style="width: 84px; text-align: center; float: left; position: relative; height: {{ len(jeraby_nazvy) * 50 }}px;">
+                
+                	<span style="top: 0; bottom: 0; left: 0px; writing-mode: sideways-lr; position: absolute;">Jeřáby</span>
+                
+                    {% for sign,pos in jeraby_nazvy.items() %}
+                    
+                    <span style="position: absolute; top: {{ pos }}px;">{{ sign }}</span>
+                
+                    {% end %}
+                
+                </div>
+
+                <div style="width: 1002px; margin-right: 20px; border-left: 1px solid black; border-right: 1px solid black; float: right; position: relative; height: {{ len(jeraby_nazvy) * 50 }}px;">
+                
+                {% for g in gantt_jeraby %}
+                
+                    <a href="#nope" id="open{{ g['id'] }}" style="border-right: 1px solid white; position: absolute; display: block; height: 30px; background: {{ g['color'] }}; top: {{ g['position'] }}px; left: {{ g['left'] }}px; width: {{ g['width'] }}px;"></a>
+
+                        <div id="{{ g['id'] }}" title="Časový úsek: transport">
+                          <p>
+                          Začátek: <strong>{{ g['start'] }}</strong> 
+                          <br>
+                          Konec: <strong>{{ g['end'] }}</strong>
+                          <br>
+                          Název jeřábu: <strong>{{ g['nazev'] }}</strong>
+                          <br>
+                          Označení jeřábu: <strong>{{ g['sign'] }}</strong>
+                          <br>
+                          Barva jeřábu: <span style="height: 15px; padding: 0 5px; background: {{ g['color'] }};">&nbsp;</span>
+                          <br>
+                          Transport produktu: <span style="height: 15px; padding: 0 5px; background: {{ g['product_color'] }};">&nbsp;</span>
+                          </p>
+                        </div>
+                
+                {% end %}
+                
+                </div>
+
+                <div style="width: 1002px; margin-right: 20px; float: right;">
+                    <span style="float: left; margin-left: -3px;">0</span>
+                    <span style="float: right; margin-right: -7px;">{{ item['vysledek']['cmax'] }}</span>
+                </div>
+
+          </div>
+        </div>
+      </div>
+    </div>  
+      
+    <!-- modal end //-->
+      
+      <!-- modal s animaci //-->
+
+    <div class="modal fade" id="exampleModalCenter3" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Animace k řešení</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+
+                <div class="m-3">
+
+                    <a href="#noway" class="replay-animation btn btn-primary">Přehrát od začátku</a>
+                    <a href="#noway" class="pausebutton btn btn-secondary">Pozastavit</a>
+                    
+                    <a href="#noway" class="speed1 btn btn-secondary">1x</a>
+                    <a href="#noway" class="speed2 btn btn-secondary">2x</a>
+                    <a href="#noway" class="speed5 btn btn-secondary">5x</a>
+                    <a href="#noway" class="speed10 btn btn-secondary">10x</a>
+                    <a href="#noway" class="speed25 btn btn-secondary">25x</a>
+                    <a href="#noway" class="speed50 btn btn-secondary">50x</a>
+                    <a href="#noway" class="speed100 btn btn-secondary">100x</a>
+
+                    &nbsp;&nbsp;
+                    <strong class="total-progress">0%</strong>&nbsp;/&nbsp;
+                    <strong class="total-time">CMAX</strong>
+                    
+                </div>
+
+			<div class="animace-out">
+			
+				<div class="zadek-jerabu">	
+				</div>
+				
+				
+				
+				<div class="podlaha"></div>
+				
+				{% for k, j in slovnik_jerabu.items() %}
+    				<div class="jerab jerab{{ j['_id'] }}" style="left: {{ j['starting_position'] * 114 }}px;">
+    				<span class="jerab-title">{{ j['sign'] }}</span>
+    				</div>
+    				<div class="hak hak{{ j['_id'] }}" style="left: {{ j['starting_position'] * 114 }}px;"></div>
+				{% end %}
+				
+				{% for k,v in slovnik_van.items() %}
+				
+    				<div class="vana" style="left: {{ v['position'] * 114 }}px;">
+    				<span class="vana-title">{{ v['sign'] }}</span>
+    				</div>
+				
+				{% end %}				
+				
+				<!-- pocatecni produkty //-->
+				{% for k,r in slovnik_result.items() %}
+						
+				{% if r['typ'] == 'namaceni' and not r['prev'] %}		
+				<div class="kostka product{{ r['productid'] }}" style="display: none; background: {{ vany_barvy[r['productid']] }}; left: {{ slovnik_van[r['stroj']]['position'] * 114 + 37 }}px;"></div>				
+				{% end %}
+				
+				{% end %}
+
+			</div>
+    
+          </div>
+        </div>
+      </div>
+    </div>  
+      
+    <!-- modal end //-->
+
+{% end %}
